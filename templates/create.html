@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>配置管理中心</title>
+
+    <link href='{{ static_url("css/bootstrap.min.css") }}' rel="stylesheet">
+    <link href='{{ static_url("css/test.css") }}' rel="stylesheet">
+    <script src='{{ static_url("js/jquery.min.js") }}'></script>
+    <script src='{{ static_url("js/bootstrap.min.js") }}'></script>
+
+  </head>
+  <body>
+    <div class="container">
+        <form method="post" action="/create">
+          <div class="form-group">
+            <label type="text">APP ID</label>
+            <input type="text" class="form-control" name='appid' placeholder="emnsp">
+          </div>
+          <div class="form-group">
+            <label >Config Name</label>
+            <input type="text" class="form-control" name='conf_name' placeholder="jdbc.properties">
+          </div>
+
+          <div>
+              <textarea class="form-control" rows="3" name='content' placeholder="host=127.0.0.1"></textarea>
+          </div>
+
+          <div class="form-group">
+            <div class="">
+              <button type="submit" class="btn btn-success btn-sm">提交</button>
+            </div>
+          </div>
+
+        </form><!-- END FORM -->
+    </div><!-- END CONTAINER -->
+
+  </body>
+</html>

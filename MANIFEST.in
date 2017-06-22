@@ -1,0 +1,9 @@
+include *.txt
+include *.js
+include *.css
+include *.html
+include *.conf
+include *.md
+
+recursive-include static *
+recursive-include templates *

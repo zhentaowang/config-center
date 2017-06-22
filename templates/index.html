@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>配置管理中心</title>
+
+    <link href='{{ static_url("css/bootstrap.min.css") }}' rel="stylesheet">
+    <link href='{{ static_url("css/test.css") }}' rel="stylesheet">
+    <script src='{{ static_url("js/jquery.min.js") }}'></script>
+    <script src='{{ static_url("js/bootstrap.min.js") }}'></script>
+
+  </head>
+  <body>
+    <div class="container-fluid">
+        <div class="well-sm">
+            <a class="btn btn-xs btn-info conn" href='/create' onclick="return confirm('确认创建吗?')">+创建应用</a>
+        </div>
+        <hr>
+
+        <table class="table table-striped  table-hover">
+            <thead>
+                <tr>
+                    <td>APP名称</td>
+                    <td>配置文件名称</td>
+                    <td>版本</td>
+                    <td>操作</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app,value in apps.items() %}
+                <tr>
+                    <td class="app">{{ app }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        {% for conf in value['conf_files'] %}
+                            <tr>
+                                <td></td>
+                                <td>{{ conf }}</td>
+                                <td>{{ value['current_version'] }}</td>
+                                <td>
+                                    <a class="btn btn-xs btn-success conn cat" href='/show?data={{ app }}({{ conf }}({{ value['current_version'] }}' value="{{ app }}({{ conf }}({{ value['current_version'] }}">查看</a>
+                                    <a class="btn btn-xs btn-danger" href='/edit?data={{ app }}({{ conf }}({{ value['current_version'] }}' onclick="">编辑</a>
+                                    <a class="btn btn-xs btn-warning" href='/delete?data={{ app }}({{ conf }}({{ value['current_version'] }}'>删除</a>
+                                </td>
+                            </tr>
+                        {% end %}
+                    </td>
+                </tr>
+                {% end %}
+            </tbody>
+        </table>
+
+    </div><!-- END CONTAINER -->
+<script>
+    $(document).ready(function () {
+{#        $('.cat').click(function (event) {#}
+{#            //alert($(this).attr('value'))#}
+{#            $.ajax({#}
+{#                    url:"/cat",#}
+{#                    data:{"data":$(this).attr('value')},#}
+{#                    success:function () {#}
+{##}
+{#                    }#}
+{#            });//end get json#}
+{##}
+{#        });//end #show#}
+
+
+    });//end document
+</script>
+  </body>
+</html>
