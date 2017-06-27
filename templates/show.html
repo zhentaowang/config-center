@@ -27,6 +27,10 @@
           <div>
               <textarea class="form-control" rows="15" name='content'>{{ conf_content['content'] }}</textarea>
           </div>
+            <div class="form-group">
+                <label>是否加密</label>
+                <input type="checkbox" name='encrypt' {% if conf_content['encrypt'] == 1 %}checked="checked"{% end %}>
+            </div>
 
 {#          <div class="form-group">#}
 {#            <div class="">#}

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,31 +11,35 @@
     <script src='{{ static_url("js/jquery.min.js") }}'></script>
     <script src='{{ static_url("js/bootstrap.min.js") }}'></script>
 
-  </head>
-  <body>
-    <div class="container">
-        <form method="post" action="/create">
-          <div class="form-group">
+</head>
+<body>
+<div class="container">
+    <form method="post" action="/create">
+        <div class="form-group">
             <label type="text">APP ID</label>
-            <input type="text" class="form-control" name='appid' placeholder="emnsp">
-          </div>
-          <div class="form-group">
-            <label >Config Name</label>
+            <input type="text" class="form-control" name='appid' placeholder="emnsp" value="{{ app_name }}">
+        </div>
+        <div class="form-group">
+            <label>Config Name</label>
             <input type="text" class="form-control" name='conf_name' placeholder="jdbc.properties">
-          </div>
+        </div>
 
-          <div>
-              <textarea class="form-control" rows="3" name='content' placeholder="host=127.0.0.1"></textarea>
-          </div>
+        <div>
+            <textarea class="form-control" rows="3" name='content' placeholder="host=127.0.0.1"></textarea>
+        </div>
+        <div class="form-group">
+            <label>是否加密</label>
+            <input type="checkbox" name='encrypt'>
+        </div>
 
-          <div class="form-group">
+        <div class="form-group">
             <div class="">
-              <button type="submit" class="btn btn-success btn-sm">提交</button>
+                <button type="submit" class="btn btn-success btn-sm">提交</button>
             </div>
-          </div>
+        </div>
 
-        </form><!-- END FORM -->
-    </div><!-- END CONTAINER -->
+    </form><!-- END FORM -->
+</div><!-- END CONTAINER -->
 
-  </body>
+</body>
 </html>
