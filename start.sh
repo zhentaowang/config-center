@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-sudo yum install openssl-devel
+apt install -y --force-yes openssl
 pip install kazoo
 pip install tornado
 pip install pymysql
