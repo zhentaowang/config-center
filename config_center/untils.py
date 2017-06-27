@@ -69,7 +69,7 @@ def decrypt(ciphertext, secret_key=sys_secret_key):
 def auth(access_token, permission):
     if access_token is None:
         return False
-    auth_url = 'https://front.zhiweicloud.com/user/permission'
+    auth_url = 'oauth-center.platform:443/user/permission'
     res = urllib2.urlopen(auth_url + "?access_token=" + access_token + "&permission=" + permission)
     obj = json.loads(res.read())
     return obj['allowed']
