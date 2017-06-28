@@ -4,8 +4,8 @@ import os
 from tornado.options import options
 from Crypto.Cipher import AES
 from binascii import b2a_hex, a2b_hex
-import urllib2
 import json
+from httplib import HTTPConnection, HTTPSConnection
 
 Permission = {
     'WRITE': 'w_',
@@ -69,7 +69,10 @@ def decrypt(ciphertext, secret_key=sys_secret_key):
 def auth(access_token, permission):
     if access_token is None:
         return False
-    auth_url = 'https://front.zhiweicloud.com/user/permission'
-    res = urllib2.urlopen(auth_url + "?access_token=" + access_token + "&permission=" + permission)
+    http_conn = HTTPSConnection("front.zhiweicloud.com")
+    http_conn.request("GET", "/user/permission?access_token=" + access_token + "&permission=" + permission)
+    res = http_conn.getresponse()
     obj = json.loads(res.read())
+    if 'allowed' not in obj:
+        return False
     return obj['allowed']
