@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 import time
 import os
+import pycurl as pycurl
 from tornado.options import options
 from Crypto.Cipher import AES
 from binascii import b2a_hex, a2b_hex
 import json
-from httplib import HTTPConnection, HTTPSConnection
+import StringIO
+import untils
 
 Permission = {
     'WRITE': 'w_',
@@ -69,10 +71,14 @@ def decrypt(ciphertext, secret_key=sys_secret_key):
 def auth(access_token, permission):
     if access_token is None:
         return False
-    http_conn = HTTPSConnection("front.zhiweicloud.com")
-    http_conn.request("GET", "/user/permission?access_token=" + access_token + "&permission=" + permission)
-    res = http_conn.getresponse()
-    obj = json.loads(res.read())
+    c = pycurl.Curl()
+    c.setopt(pycurl.URL,
+             untils.get_property('auth_server') + '/user/permission?access_token=' + access_token + "&permission=" + permission)
+    b = StringIO.StringIO()
+    c.setopt(pycurl.WRITEFUNCTION, b.write)
+    c.perform()
+    json_str = str(b.getvalue())
+    obj = json.loads(json_str)
     if 'allowed' not in obj:
         return False
     return obj['allowed']
