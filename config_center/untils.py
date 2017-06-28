@@ -7,7 +7,6 @@ from Crypto.Cipher import AES
 from binascii import b2a_hex, a2b_hex
 import json
 import StringIO
-import untils
 
 Permission = {
     'WRITE': 'w_',
@@ -51,19 +50,25 @@ def version():
     return time.strftime("%Y%m%d%H%M%S", time.localtime(t))
 
 
+def padding(text):
+    add = 16 - len(text) % 16
+    text += add * '\0'
+    return text
+
+
 sys_secret_key = '12345678123456'
 
 
 def encrypt(plaintext, secret_key=sys_secret_key):
-    text_len = len(plaintext)
-    add = 16 - text_len % 16
-    plaintext += add * '\0'
-    aes = AES.new(secret_key, AES.MODE_CBC, '0000000000000000')
+    plaintext = padding(plaintext)
+    secret_key = padding(secret_key)
+    aes = AES.new(secret_key, AES.MODE_CBC, secret_key)
     return b2a_hex(aes.encrypt(plaintext))
 
 
 def decrypt(ciphertext, secret_key=sys_secret_key):
-    aes = AES.new(secret_key, AES.MODE_CBC, '0000000000000000')
+    secret_key = padding(secret_key)
+    aes = AES.new(secret_key, AES.MODE_CBC, secret_key)
     plaintext = aes.decrypt(a2b_hex(ciphertext))
     return plaintext.rstrip('\0')
 
@@ -73,7 +78,8 @@ def auth(access_token, permission):
         return False
     c = pycurl.Curl()
     c.setopt(pycurl.URL,
-             untils.get_property('auth_server') + '/user/permission?access_token=' + access_token + "&permission=" + permission)
+             get_property(
+                 'auth_server') + '/user/permission?access_token=' + access_token + "&permission=" + permission)
     b = StringIO.StringIO()
     c.setopt(pycurl.WRITEFUNCTION, b.write)
     c.perform()
