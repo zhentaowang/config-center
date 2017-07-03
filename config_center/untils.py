@@ -62,13 +62,13 @@ sys_secret_key = '12345678123456'
 def encrypt(plaintext, secret_key=sys_secret_key):
     plaintext = padding(plaintext)
     secret_key = padding(secret_key)
-    aes = AES.new(secret_key, AES.MODE_CBC, secret_key)
+    aes = AES.new(secret_key[0:16], AES.MODE_CBC, secret_key[0:16])
     return b2a_hex(aes.encrypt(plaintext))
 
 
 def decrypt(ciphertext, secret_key=sys_secret_key):
     secret_key = padding(secret_key)
-    aes = AES.new(secret_key, AES.MODE_CBC, secret_key)
+    aes = AES.new(secret_key[0:16], AES.MODE_CBC, secret_key[0:16])
     plaintext = aes.decrypt(a2b_hex(ciphertext))
     return plaintext.rstrip('\0')
 
