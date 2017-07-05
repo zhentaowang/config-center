@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import time
 import os
+import pycurl as pycurl
 from tornado.options import options
 from Crypto.Cipher import AES
 from binascii import b2a_hex, a2b_hex
-import urllib2
 import json
+import StringIO
 
 Permission = {
     'WRITE': 'w_',
@@ -49,19 +50,25 @@ def version():
     return time.strftime("%Y%m%d%H%M%S", time.localtime(t))
 
 
+def padding(text):
+    add = 16 - len(text) % 16
+    text += add * '\0'
+    return text
+
+
 sys_secret_key = '12345678123456'
 
 
 def encrypt(plaintext, secret_key=sys_secret_key):
-    text_len = len(plaintext)
-    add = 16 - text_len % 16
-    plaintext += add * '\0'
-    aes = AES.new(secret_key, AES.MODE_CBC, '0000000000000000')
+    plaintext = padding(plaintext)
+    secret_key = padding(secret_key)
+    aes = AES.new(secret_key[0:16], AES.MODE_CBC, secret_key[0:16])
     return b2a_hex(aes.encrypt(plaintext))
 
 
 def decrypt(ciphertext, secret_key=sys_secret_key):
-    aes = AES.new(secret_key, AES.MODE_CBC, '0000000000000000')
+    secret_key = padding(secret_key)
+    aes = AES.new(secret_key[0:16], AES.MODE_CBC, secret_key[0:16])
     plaintext = aes.decrypt(a2b_hex(ciphertext))
     return plaintext.rstrip('\0')
 
@@ -69,7 +76,15 @@ def decrypt(ciphertext, secret_key=sys_secret_key):
 def auth(access_token, permission):
     if access_token is None:
         return False
-    auth_url = 'https://front.zhiweicloud.com/user/permission'
-    res = urllib2.urlopen(auth_url + "?access_token=" + access_token + "&permission=" + permission)
-    obj = json.loads(res.read())
+    c = pycurl.Curl()
+    c.setopt(pycurl.URL,
+             get_property(
+                 'auth_server') + '/user/permission?access_token=' + access_token + "&permission=" + permission)
+    b = StringIO.StringIO()
+    c.setopt(pycurl.WRITEFUNCTION, b.write)
+    c.perform()
+    json_str = str(b.getvalue())
+    obj = json.loads(json_str)
+    if 'allowed' not in obj:
+        return False
     return obj['allowed']

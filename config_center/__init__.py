@@ -18,6 +18,8 @@ define('db_user', default='root', type=str, help='zookeeper root')
 define('db_password', default='123456', type=str, help='config center workspace')
 define('db_schema', default=None, type=str, help='config center workspace')
 
+define('auth_server', default=None, type=str, help='config center workspace')
+
 
 def make_app(router, **settings):
     app = Application(router, **settings)
