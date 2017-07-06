@@ -127,4 +127,4 @@ class DeleteHandler(RequestHandler):
             raise HTTPError(500, reason=str(e))
         # delete from mysql
         config_dao.delete_by_config_name(appid, conf_name)
-        self.redirect('/')
+        self.redirect('/conf')

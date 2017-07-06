@@ -10,7 +10,6 @@ define('bind', default='0.0.0.0', type=str, help='Server bind')
 
 define('connect', default='127.0.0.1:2181', type=str, help='zookeeper connect')
 define('root', default='/conf', type=str, help='zookeeper root')
-define('workspace', default='/tmp/workspace', type=str, help='config center workspace')
 
 define('db_host', default='127.0.0.1', type=str, help='Server bind')
 define('db_port', default='3306', type=int, help='zookeeper connect')

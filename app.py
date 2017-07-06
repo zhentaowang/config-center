@@ -9,12 +9,12 @@ from config_center import handler
 from config_center import app_handler
 
 router = [
-    (r'/createApp', app_handler.CreateAppHandler),
-    (r'/', handler.IndexHandler),
-    (r'/create', handler.CreateHandler),
-    (r'/edit', handler.EditHandler),
-    (r'/show', handler.ShowHandler),
-    (r'/delete', handler.DeleteHandler),
+    (r'/conf/createApp', app_handler.CreateAppHandler),
+    (r'/conf', handler.IndexHandler),
+    (r'/conf/create', handler.CreateHandler),
+    (r'/conf/edit', handler.EditHandler),
+    (r'/conf/show', handler.ShowHandler),
+    (r'/conf/delete', handler.DeleteHandler),
 ]
 if __name__ == '__main__':
     template_path = os.path.join(os.path.dirname(__file__), "templates")
