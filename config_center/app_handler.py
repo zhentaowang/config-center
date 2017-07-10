@@ -15,4 +15,4 @@ class CreateAppHandler(RequestHandler):
         app_name = self.get_argument('appName')
         secret_key = self.get_argument('secretKey', None)
         app_dao.add_app(app_name, secret_key, username)
-        self.redirect('/')
+        self.redirect('/conf')

@@ -61,7 +61,7 @@ class CreateHandler(RequestHandler):
         except Exception as e:
             raise HTTPError(500, reason=str(e))
         self.persistence_conf(appid, conf_name, content, untils.version(), encrypt, username)
-        self.redirect('/')
+        self.redirect('/conf')
 
 
 class IndexHandler(RequestHandler):
