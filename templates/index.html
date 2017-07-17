@@ -141,7 +141,7 @@
         $.cookie('username', params.username);
         $.ajax({
             type: "POST",
-            url: "https://front.zhiweicloud.com/oauth/access_token",
+            url: "http://121.196.211.92:30003/oauth/access_token",
             // The key needs to match your method's input parameter (case-sensitive).
             data: JSON.stringify(params),
             contentType: "application/json; charset=utf-8",

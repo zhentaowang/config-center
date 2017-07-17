@@ -74,8 +74,6 @@ def decrypt(ciphertext, secret_key=sys_secret_key):
 
 
 def auth(access_token, permission):
-    if 1 == 1:
-        return True
     if access_token is None:
         return False
     c = pycurl.Curl()
