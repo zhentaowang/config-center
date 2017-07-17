@@ -135,17 +135,15 @@
             "username": $("input[name='username']").val(),
             "password": $("input[name='password']").val(),
             "grant_type": "password",
-            "client_id": "search",
-            "client_secret": "A43F-530204EDB856"
+            "client_id": "HSR",
+            "client_secret": "111111"
         };
         $.cookie('username', params.username);
         $.ajax({
             type: "POST",
-            url: "https://front.zhiweicloud.com/oauth/access_token",
+            url: "http://airport.zhiweicloud.com/oauth/oauth/access_token",
             // The key needs to match your method's input parameter (case-sensitive).
-            data: JSON.stringify(params),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
+            data: params,
             success: function (data) {
                 console.log(data);
                 if (data['access_token'] !== null) {

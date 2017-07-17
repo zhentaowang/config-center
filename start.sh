@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-python /code/app.py
+python /code/config-center/app.py

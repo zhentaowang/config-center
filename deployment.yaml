@@ -1,0 +1,45 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: config-center
+  namespace: config-center
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: config-center
+    spec:
+      containers:
+        - name: config-center
+          image: registry.cn-hangzhou.aliyuncs.com/wyun/python-confcenter
+          command: ["python","code/app.py"]
+          volumeMounts:
+          - mountPath: "/code"
+            name: code
+            subPath: config-center
+          - mountPath: "/etc/localtime"
+            name: tz-config
+          ports:
+            - containerPort: 8000
+      volumes:
+        - name: code
+          persistentVolumeClaim:
+            claimName: pvc-zookeeper
+        - name: tz-config
+          hostPath:
+            path: /etc/localtime
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: config-center
+  namespace: config-center
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8000
+    protocol: TCP
+  selector:
+    app: config-center

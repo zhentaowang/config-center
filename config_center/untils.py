@@ -20,8 +20,8 @@ Permission = {
 def load_properties():
     if os.path.exists('/etc/confcenter-api.conf'):
         options.parse_config_file('/etc/confcenter-api.conf')
-    elif os.path.exists('/code/confcenter.conf'):
-        options.parse_config_file('/code/confcenter.conf')
+    elif os.path.exists('/code/config-center/confcenter.conf'):
+        options.parse_config_file('/code/config-center/confcenter.conf')
     elif os.path.exists('./confcenter.conf'):
         options.parse_config_file('./confcenter.conf')
     options.parse_command_line()
@@ -78,8 +78,7 @@ def auth(access_token, permission):
         return False
     c = pycurl.Curl()
     c.setopt(pycurl.URL,
-             get_property(
-                 'auth_server') + '/user/permission?access_token=' + access_token + "&permission=" + permission)
+             get_property('auth_server') + '/oauth/user/getUser?access_token=' + access_token + "&permission=" + permission)
     b = StringIO.StringIO()
     c.setopt(pycurl.WRITEFUNCTION, b.write)
     c.perform()
