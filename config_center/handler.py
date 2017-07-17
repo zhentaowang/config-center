@@ -25,6 +25,17 @@ def auth(p_type, apps, access_token):
         return untils.auth(access_token, permission)
 
 
+def create_or_set_zk(application, znode, content):
+    application.zk.ensure_path(znode)
+    try:
+        if application.zk.exists(znode):
+            application.zk.set(znode, content.encode())
+        else:
+            application.zk.create(znode, content.encode())
+    except Exception as e:
+        raise HTTPError(500, reason=str(e))
+
+
 class CreateHandler(RequestHandler):
     # 写数据库，并更新当前版本为可用版本
     def persistence_conf(self, app_name, config_name, content, version, encrypt=False, username=None):
@@ -64,21 +75,31 @@ class CreateHandler(RequestHandler):
         self.redirect('/conf')
 
 
+def get_configs(apps):
+    app_names = map(lambda x: x['app_name'], apps)
+    configs = {}
+    for app_name in app_names:
+        configs[app_name] = []
+    data = config_dao.get_config_by_condition(app_name=app_names, effective=1)
+    for config in data:
+        app_name = config['app_name']
+        configs[app_name].append(config)
+    return configs
+
+
 class IndexHandler(RequestHandler):
     def get(self):
         username = self.get_cookie('username', [])
-        app_names = map(lambda x: x['app_name'], app_dao.get_app(owner=username))
-        configs = {}
-        if len(app_names) == 0:
-            self.render('index.html', apps=configs)
+        access_token = self.get_cookie('access_token', None)
+        if auth(untils.Permission['READ'], untils.Permission['APP_ALL'], access_token):
+            # get all configs
+            self.render('index.html', apps=get_configs(app_dao.get_app()))
+            return
+        apps = app_dao.get_app(owner=username)
+        if len(apps) == 0:
+            self.render('index.html', apps={})
         else:
-            for app_name in app_names:
-                configs[app_name] = []
-            data = config_dao.get_config_by_condition(app_name=app_names, effective=1)
-            for config in data:
-                app_name = config['app_name']
-                configs[app_name].append(config)
-            self.render('index.html', apps=configs)
+            self.render('index.html', apps=get_configs(apps))
 
 
 def get_uniq_config(app_name, config_name, version):
@@ -127,4 +148,22 @@ class DeleteHandler(RequestHandler):
             raise HTTPError(500, reason=str(e))
         # delete from mysql
         config_dao.delete_by_config_name(appid, conf_name)
+        self.redirect('/conf')
+
+
+class ReloadHandler(RequestHandler):
+    def get(self, *args, **kwargs):
+        data = self.get_argument('data')
+        appid, conf_name, current_version = data.split('(')
+        access_token = self.get_cookie('access_token', None)
+        if not auth(untils.Permission['WRITE'], [untils.Permission['APP_ALL'], appid], access_token):
+            raise HTTPError(403, reason='Permission deny')
+        # reload from mysql
+        node = joinPath('/', [options.root, appid, conf_name])
+        configs = config_dao.get_config_by_condition(app_name=appid, config_name=conf_name, version=current_version)
+        try:
+            if len(configs) > 0:
+                self.application.zk.set(node, configs[0]['config_content'].encode())
+        except Exception as e:
+            raise HTTPError(500, reason=str(e))
         self.redirect('/conf')
