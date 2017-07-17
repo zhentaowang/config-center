@@ -78,7 +78,7 @@ def auth(access_token, permission):
         return False
     c = pycurl.Curl()
     c.setopt(pycurl.URL,
-             get_property('auth_server') + '/oauth/user/getUser?access_token=' + access_token + "&permission=" + permission)
+             get_property('auth_server') + '/oauth/user/permission?access_token=' + access_token + "&permission=" + permission)
     b = StringIO.StringIO()
     c.setopt(pycurl.WRITEFUNCTION, b.write)
     c.perform()
