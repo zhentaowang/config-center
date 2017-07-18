@@ -101,8 +101,8 @@
             <td></td>
             <td></td>
             <td>
-                <a class="btn btn-warning btn-xs" data-toggle="modal"
-                   onclick="$('input[name=\'appName\']').val('{{ app }}')" data-target="#createAppModal">添加密钥</a>
+                {#                <a class="btn btn-warning btn-xs" data-toggle="modal"#}
+                {#                   onclick="$('input[name=\'appName\']').val('{{ app }}')" data-target="#createAppModal">添加密钥</a>#}
                 <a class="btn btn-primary btn-xs" href="/conf/create?data={{ app }}">添加配置</a>
             </td>
         </tr>
@@ -115,11 +115,13 @@
                 <a class="btn btn-xs btn-success conn cat"
                    href='/conf/show?data={{ app }}({{ conf['config_name'] }}({{ conf['version'] }}'
                    value="{{ app }}({{ conf['config_name'] }}({{ conf['version'] }}">查看</a>
-                <a class="btn btn-xs btn-danger"
+                <a class="btn btn-xs btn-primary"
                    href='/conf/edit?data={{ app }}({{ conf['config_name'] }}({{ conf['version'] }}'
                    onclick="">编辑</a>
-                <a class="btn btn-xs btn-warning" onclick="return confirm('确认删除？')"
+                <a class="btn btn-xs btn-danger" onclick="return confirm('确认删除？')"
                    href='/conf/delete?data={{ app }}({{ conf['config_name'] }}({{ conf['version'] }}'>删除</a>
+                <a class="btn btn-xs btn-warning"
+                   href='/conf/reload?data={{ app }}({{ conf['config_name'] }}({{ conf['version'] }}'>重新加载</a>
             </td>
         </tr>
         {% end %}
@@ -138,7 +140,6 @@
             "client_id": "search",
             "client_secret": "A43F-530204EDB856"
         };
-        $.cookie('username', params.username);
         $.ajax({
             type: "POST",
             url: "http://121.196.211.92:30003/oauth/access_token",
@@ -149,8 +150,8 @@
             success: function (data) {
                 console.log(data);
                 if (data['access_token'] !== null) {
-                    {#todo set username here#}
                     $.cookie("access_token", data['access_token']);
+                    $.cookie('username', data['mobile_phone']);
                 } else {
                     alert("登录失败");
                 }
