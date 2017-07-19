@@ -15,6 +15,7 @@ router = [
     (r'/conf/edit', handler.EditHandler),
     (r'/conf/show', handler.ShowHandler),
     (r'/conf/delete', handler.DeleteHandler),
+    (r'/conf/reload', handler.ReloadHandler),
 ]
 if __name__ == '__main__':
     template_path = os.path.join(os.path.dirname(__file__), "templates")
