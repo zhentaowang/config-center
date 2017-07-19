@@ -56,21 +56,14 @@ class CreateHandler(RequestHandler):
         content = self.get_argument('content')
         encrypt = self.get_argument('encrypt', False) == 'on'
         content = content.replace('\r\n', '\n')
-        root = '/' + options.root
         if encrypt:
             # 获取密钥
             secret_key = app_dao.get_app(appid)[0]['secret_key']
             content = untils.encrypt(content, secret_key)
         # 更新zookeeper
+        root = '/' + options.root
         node = joinPath('/', [root, appid, conf_name])
-        self.application.zk.ensure_path(node)
-        try:
-            if self.application.zk.exists(node):
-                self.application.zk.set(joinPath('/', [node]), content.encode())
-            else:
-                self.application.zk.create(joinPath('/', [node]), content.encode())
-        except Exception as e:
-            raise HTTPError(500, reason=str(e))
+        create_or_set_zk(self.application, node, content)
         self.persistence_conf(appid, conf_name, content, untils.version(), encrypt, username)
         self.redirect('/conf')
 
@@ -161,9 +154,6 @@ class ReloadHandler(RequestHandler):
         # reload from mysql
         node = joinPath('/', [options.root, appid, conf_name])
         configs = config_dao.get_config_by_condition(app_name=appid, config_name=conf_name, version=current_version)
-        try:
-            if len(configs) > 0:
-                self.application.zk.set(node, configs[0]['config_content'].encode())
-        except Exception as e:
-            raise HTTPError(500, reason=str(e))
+        if len(configs) > 0:
+            create_or_set_zk(self.application, node, configs[0]['config_content'])
         self.redirect('/conf')
