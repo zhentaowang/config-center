@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>配置管理中心</title>
 
-    <link href='http://wyun-test.oss-cn-hangzhou.aliyuncs.com/conf/css/bootstrap.min.css' rel="stylesheet">
-    <link href='http://wyun-test.oss-cn-hangzhou.aliyuncs.com/conf/css/test.css' rel="stylesheet">
-    <script src='http://wyun-test.oss-cn-hangzhou.aliyuncs.com/conf/js/jquery.min.js'></script>
-    <script src='http://wyun-test.oss-cn-hangzhou.aliyuncs.com/conf/js/jquery.cookie.js'></script>
-    <script src='http://wyun-test.oss-cn-hangzhou.aliyuncs.com/conf/js/bootstrap.min.js'></script>
+    <link href='https://wyun-test.oss-cn-hangzhou.aliyuncs.com/conf/css/bootstrap.min.css' rel="stylesheet">
+    <link href='https://wyun-test.oss-cn-hangzhou.aliyuncs.com/conf/css/test.css' rel="stylesheet">
+    <script src='https://wyun-test.oss-cn-hangzhou.aliyuncs.com/conf/js/jquery.min.js'></script>
+    <script src='https://wyun-test.oss-cn-hangzhou.aliyuncs.com/conf/js/jquery.cookie.js'></script>
+    <script src='https://wyun-test.oss-cn-hangzhou.aliyuncs.com/conf/js/bootstrap.min.js'></script>
 
 </head>
 <body>
@@ -152,6 +152,7 @@
                 if (data['access_token'] !== null) {
                     $.cookie("access_token", data['access_token']);
                     $.cookie('username', data['mobile_phone']);
+                    alert("登录成功");
                 } else {
                     alert("登录失败");
                 }

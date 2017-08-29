@@ -111,7 +111,7 @@ class ShowHandler(RequestHandler):
         data = self.get_argument('data')
         appid, conf_name, current_version = data.split('(')
         access_token = self.get_cookie('access_token', None)
-        if not auth(untils.Permission['READ'], [untils.Permission['APP_ALL'], appid], access_token):
+        if not auth(untils.Permission['UPDATE'], [untils.Permission['APP_ALL'], appid], access_token):
             raise HTTPError(403, reason='Permission deny')
         self.render('show.html', conf_content=get_uniq_config(appid, conf_name, current_version))
 
