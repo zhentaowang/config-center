@@ -8,6 +8,9 @@ from config_center.untils import joinPath
 from config_dao import ConfigDao
 from app_dao import AppDao
 import untils
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 config_dao = ConfigDao()
 app_dao = AppDao()
@@ -45,7 +48,7 @@ class CreateHandler(RequestHandler):
         content = self.get_argument('content')
         encrypt = self.get_argument('encrypt', False) == 'on'
         content = content.replace('\r\n', '\n')
-        root =  options.root
+        root = options.root
         if encrypt:
             # 获取密钥
             secret_key = app_dao.get_app(appid)[0]['secret_key']
